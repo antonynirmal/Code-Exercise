@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
  * Test class for verifying the Revere Polish Notation equations
  * (based on the example from the programming exercise document)
  */
-public class ForexAppTest {
+public class RPNApplicationTest {
 
     @Test
     public void AddToStack() {
