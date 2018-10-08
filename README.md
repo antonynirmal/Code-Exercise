@@ -1,4 +1,4 @@
-Command line Reverse Polish Notation Calculator
+<b>Command line Reverse Polish Notation Calculator</b>
 
 Calculator waits for user input and expects to receive strings containing whitespace separated lists of numbers and operators. Available operators are +, -, *, /, sqrt, undo, clear & exit. 
 
@@ -9,10 +9,10 @@ undo: undoes the previous operation.
 undo undo: will undo the previous two operations.
 exit: quit the application.
 
-Reqirements
+<b>Reqirements</b>
 Java 8, JUnit & Maven
 
-Compile, Test & Run
+<b>Compile, Test & Run</b>
 mvn compile
 mvn test
 mvn exec:run
