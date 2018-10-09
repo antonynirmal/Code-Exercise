@@ -12,16 +12,18 @@ import java.util.Stack;
  */
 public class RPNApplication {
 
-    public Stack<Double> stack;
-    RepositoryHandler repositoryHandler;
-    int position;
+    Stack<Double> stack;
+    private RepositoryHandler repositoryHandler;
+     //Counter for the Stack position.
+    private int position;
+
     RPNApplication(){
         this.stack =  new Stack<>();
         this.repositoryHandler = new RepositoryHandler();
         position = 0;
     }
 
-    public Stack<Double> getStack() {
+    Stack<Double> getStack() {
         return stack;
     }
 
@@ -67,7 +69,7 @@ public class RPNApplication {
                         if (token.equals(ArithmeticOperator.DIVIDE.text)) {
                             Double top = stack.pop();
                             if (top == 0) {
-                                System.out.println("Well, Any number divided by Zero, still undefined!");
+                                System.out.println("Well, Any number divided by Zero is undefined!");
                             } else {
                                 stack.push(formatter(ArithmeticOperator.DIVIDE.calculate(ArithmeticOperator.DIVIDE, stack.pop(), top)));
                             }
@@ -84,13 +86,18 @@ public class RPNApplication {
                             stack.push(formatter(Math.sqrt(d)));
                             repositoryHandler.setToRepository(this.store());
                         }catch(RPNException e){
-                            System.out.println("Invalid format");
+                            System.out.println("Something not right with the numbers!");
                         }
 
                     }
                     if (token.equals(OtherOperator.UNDO.text)) {
-                        this.retrieve((Repository) repositoryHandler.getFromRepository());
-
+                        Repository repository = (Repository) repositoryHandler.getFromRepository();
+                        if (repository != null)
+                            this.retrieve(repository);
+                        else{
+                            stack.clear();
+                            System.out.println("Stack is empty!");
+                        }
                     }
                     if (token.equals(OtherOperator.CLEAR.text)) {
                         stack.clear();
@@ -101,7 +108,7 @@ public class RPNApplication {
             }
             this.print();
         }catch(RPNException r){
-            System.out.println("Unkown errr");
+            System.out.println("Unknown error");
         }
 
     }

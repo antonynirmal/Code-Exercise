@@ -1,19 +1,16 @@
 package my.exercise.rpn;
 
-import com.sun.jmx.mbeanserver.Repository;
-
-import java.util.Optional;
 import java.util.Stack;
 
 public class RepositoryHandler{
 
-    private Stack<Object> objectStack;
+    private final Stack<Object> objectStack;
 
     RepositoryHandler (){
         objectStack = new Stack<>();
     }
 
-    public void setToRepository(Object object) throws RPNException {
+    void setToRepository(Object object) throws RPNException {
         if(object != null)
             objectStack.push(object);
         else
@@ -24,15 +21,15 @@ public class RepositoryHandler{
         return objectStack.size();
     }
 
-    public Object getFromRepository() {
+    Object getFromRepository() {
         if (!this.objectStack.empty()) {
-            objectStack.pop(); Object object = objectStack.peek();
-            return object;
+            objectStack.pop();
+            return objectStack.size() == 0 ? null : objectStack.peek();
         }
         return null;
     }
 
-    public void reset(){
+    void reset(){
         this.objectStack.clear();
     }
 }
