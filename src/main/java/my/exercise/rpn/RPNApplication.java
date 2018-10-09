@@ -139,7 +139,7 @@ public class RPNApplication {
     private Double formatter(Double digit) {
         NumberFormat format = NumberFormat.getIntegerInstance();
         int STORE_MAX_DIGIT = 15;
-        double formatDigit;
+        Double formatDigit;
         format.setMaximumFractionDigits(STORE_MAX_DIGIT);
         formatDigit = Double.valueOf(format.format(digit));
         return formatDigit;
