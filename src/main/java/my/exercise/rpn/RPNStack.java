@@ -1,47 +1,67 @@
 package my.exercise.rpn;
 
+import my.exercise.rpn.repository.Repository;
+import my.exercise.rpn.repository.RepositoryHandler;
+
 import java.util.Stack;
 
+/**
+ * Stack Wrapper Class for Stack operations
+ */
 public class RPNStack {
-    Stack<Double> stack = new Stack<>();
+
+    private Stack<Double> stack;
+    private RepositoryHandler repositoryHandler;
 
     public RPNStack() {
-        this.store();
+        stack = new Stack<>();
+        repositoryHandler = new RepositoryHandler();
     }
 
-    public Double getStack() {
-        if (!this.stack.empty()) {
+    public Stack<Double> getStack() {
+        return stack;
+    }
+
+    // Push to Stack and persist using repository
+    public void push(Double input) throws RPNException {
+        this.stack.push(input);
+        repositoryHandler.addStack(store());
+    }
+
+    // Stack pop
+    public Double pop() {
             return stack.pop();
-        }
-        return null;
     }
 
-    public void setStack(double stack) {
-        this.stack.push(stack);
-    }
-
-    void change(Stack stack) {
-        this.store();
-    }
-
+    //Clone and persist for undo
     public Repository store() {
-        return new Repository(this.stack);
+        return new Repository((Stack) stack.clone());
     }
 
+    // To retrieve persisted repo
     void retrieve(Repository repo) {
 
         this.stack = repo.getStack();
     }
 
-    private class Repository {
-        private Stack stack;
+    // Undo method
+    public void undo() throws RPNException {
 
-        Repository(Stack stack) {
-            this.stack = stack;
-        }
-
-        public Stack getStack() {
-            return this.stack;
+        Repository repository = (Repository) repositoryHandler.getStack();
+        if (repository != null)
+            this.retrieve(repository);
+        else {
+            stack.clear();
+            System.out.println("Stack is empty!");
         }
     }
+
+    // To reset stack
+    public void clear(){
+        stack.clear();
+        repositoryHandler.reset();
+    }
+
+
+
 }

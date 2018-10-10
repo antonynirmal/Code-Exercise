@@ -1,0 +1,120 @@
+package my.exercise.rpn;
+
+import my.exercise.rpn.operatons.*;
+
+import java.text.NumberFormat;
+import java.util.Scanner;
+
+import static my.exercise.rpn.operatons.Operator.*;
+
+/**
+ * RPN Calculator
+ */
+public class Calculator {
+
+    public RPNStack stack;
+    int position;
+
+    Calculator() {
+        position = 0;
+        stack = new RPNStack();
+    }
+
+    public RPNStack getStack() {
+        return stack;
+    }
+
+    //Calculate Reverse Polish Notation
+    public void invoker(String expression) throws RPNException {
+
+        Scanner input = new Scanner(expression);
+        String token;
+        Double result=0.0;
+        while (input.hasNext()) {
+            position++;
+            token = input.next();
+            if (isOperand(token)) {
+                stack.push(Double.valueOf(token));
+            }
+            if(token.equals(SQUARE.getOperator())){
+                result=new SquareOperation(stack.pop()).calculate();
+                stack.push(decimalFormat(result));
+            }
+            if(token.equals(UNDO.getOperator())){
+                stack.undo();
+            }
+            if(token.equals(CLEAR.getOperator())){
+                reset();
+            }
+            if (stack.getStack().size() > 1 && this.isOperator(token)) {
+
+                switch(Operator.forValue(token)){
+                    case ADD:
+                        result=(new AddOperation(stack.pop(), stack.pop()).calculate());
+                        stack.push(decimalFormat(result));
+                        break;
+                    case SUBSTRACT:
+                        result=new SubtractOperation(stack.pop(), stack.pop()).calculate();
+                        stack.push(decimalFormat(result));
+                        break;
+                    case MULTIPLE:
+                        result=new MultiplyOperation(stack.pop(), stack.pop()).calculate();
+                        stack.push(decimalFormat(result));
+                        break;
+                    case DIVIDE:
+                        result=new DivideOperation(stack.pop(), stack.pop()).calculate();
+                        stack.push(decimalFormat(result));
+                        break;
+                    default:
+                        System.out.println("Reached Default in Case:");
+                }
+            } else if (stack.getStack().size() <= 1 && this.isOperator(token)) {
+                System.out.println("Token " + token + "(position: " + position + ") : insufficient parameters");
+                break;
+            }
+        }
+    }
+    // To validate existence of Operator in string
+    private boolean isOperator(String input) {
+        return input.equals(ADD.getOperator()) || input.equals(SUBSTRACT.getOperator()) ||
+                input.equals(MULTIPLE.getOperator()) || input.equals(DIVIDE.getOperator()) ;
+    }
+    // To validate existence of Operand in string
+    private boolean isOperand(String input) {
+        return input.matches("-?\\d+(\\.\\d+)?");
+    }
+
+    // Reset and clear stack
+    public void reset(){
+        position=0;
+        stack.clear();
+    }
+
+    //enforcing 15 digit
+    public Double decimalFormat(Double digit) {
+        NumberFormat format = NumberFormat.getIntegerInstance();
+        int STORE_MAX_DIGIT = 15;
+        Double formatDigit;
+        format.setMaximumFractionDigits(STORE_MAX_DIGIT);
+        formatDigit = Double.valueOf(format.format(digit));
+        return formatDigit;
+    }
+
+    // Limiting decimal to 10 for display
+    public Double outputFormat(Double digit) {
+        int DISPLAY_MAX_DIGIT = 10;
+        NumberFormat format = NumberFormat.getIntegerInstance();
+        format.setMaximumFractionDigits(DISPLAY_MAX_DIGIT);
+        if(digit - Double.valueOf(format.format(digit)) < 0.0000001){
+            return Double.valueOf(format.format(digit));
+        }
+        return digit;
+    }
+
+    //Print the Stack with whitespace as delimiter.
+    public void output(){
+        System.out.print("Stack: ");
+        stack.getStack().forEach(e -> System.out.print(outputFormat(e) + "  "));
+        System.out.print("\n");
+    }
+}
