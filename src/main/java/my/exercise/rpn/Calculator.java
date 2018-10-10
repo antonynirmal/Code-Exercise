@@ -20,7 +20,7 @@ public class Calculator {
         stack = new RPNStack();
     }
 
-    private RPNStack getStack() {
+    protected RPNStack getStack() {
         return stack;
     }
 

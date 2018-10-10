@@ -34,9 +34,9 @@ public class CalculatorTest {
         Calculator tester = new Calculator();
 
        tester.invoker("1 1 +");
-       double d = tester.stack.getStack().peek();
+       double result = tester.getStack().getStack().peek();
         // assert statements
-        assertEquals(0, d, 2.0);
+        assertEquals(0, result, 2.0);
     }
 
     @Test
@@ -44,9 +44,22 @@ public class CalculatorTest {
         Calculator tester = new Calculator();
 
         tester.invoker("1 2 3 + +");
-        double d = tester.stack.getStack().peek();
+        double result = tester.getStack().getStack().peek();
         // assert statements
-        assertEquals(0, d, 6.0);
+        assertEquals(0, result, 6.0);
+    }
+
+    @Test
+    public void AdditionOfThreeNumbersAndUndo()  throws RPNException {
+        Calculator tester = new Calculator();
+
+        tester.invoker("1 2 3 + + undo");
+        String out = "";
+        for (Double E : tester.getStack().getStack())
+            out = out + E +" ";
+        double d = tester.getStack().getStack().peek();
+        // assert statements
+        assertEquals("1.0 5.0".trim(), out.trim());
     }
 
     @Test
@@ -54,10 +67,10 @@ public class CalculatorTest {
         Calculator tester = new Calculator();
 
         tester.invoker("2 sqrt");
-        double d = tester.stack.getStack().peek();
+        double result = tester.getStack().getStack().peek();
         // assert statements
-        System.out.println("Result: " + d );
-        assertEquals(0, d, 1.4142135623730951);
+        System.out.println("Result: " + result );
+        assertEquals(0, result, 1.4142135623730951);
     }
 
     @Test
@@ -65,8 +78,29 @@ public class CalculatorTest {
         Calculator tester = new Calculator();
 
         tester.invoker("1 2 3 * 5 + * * 6 5");
-        double d = tester.stack.getStack().peek();
+        double result = tester.getStack().getStack().peek();
         // assert statements
-        assertEquals((double)11.0, (double)d, (double)0.0);
+        assertEquals((double)11.0, (double)result, (double)0.0);
     }
+
+    @Test
+    public void DividebyZero() throws RPNException  {
+        Calculator tester = new Calculator();
+
+        tester.invoker("1 0");
+        // assert statements
+        assertEquals("Undefined - Divide by 0", "Undefined - Divide by 0");
+    }
+
+    @Test
+    public void SubtractAndClear() throws RPNException  {
+        Calculator tester = new Calculator();
+
+        tester.invoker("5 2 clear");
+        boolean result = tester.getStack().getStack().empty();
+        System.out.println(result);
+        // assert statements
+        assertEquals("Stack is Empty: ",true, result);
+    }
+
 }
