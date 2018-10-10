@@ -34,7 +34,7 @@ public class Calculator {
             position++;
             token = input.next();
             if (isOperand(token)) {
-                stack.push(Double.valueOf(token));
+                stack.push(decimalFormat(Double.valueOf(token)));
             }
             if(token.equals(SQUARE.getOperator())){
                 result=new SquareOperation(stack.pop()).calculate();
@@ -50,20 +50,20 @@ public class Calculator {
 
                 switch(Operator.forValue(token)){
                     case ADD:
-                        result=(new AddOperation(stack.pop(), stack.pop()).calculate());
-                        stack.push(decimalFormat(result));
+                        stack.push(decimalFormat(new AddOperation(stack.pop(), stack.pop()).calculate()));
                         break;
                     case SUBSTRACT:
-                        result=new SubtractOperation(stack.pop(), stack.pop()).calculate();
-                        stack.push(decimalFormat(result));
+                        stack.push(decimalFormat(new SubtractOperation(stack.pop(), stack.pop()).calculate()));
                         break;
                     case MULTIPLE:
-                        result=new MultiplyOperation(stack.pop(), stack.pop()).calculate();
-                        stack.push(decimalFormat(result));
+                        stack.push(decimalFormat(new MultiplyOperation(stack.pop(), stack.pop()).calculate()));
                         break;
                     case DIVIDE:
-                        result=new DivideOperation(stack.pop(), stack.pop()).calculate();
-                        stack.push(decimalFormat(result));
+                        if(stack.getStack().peek() != 0)
+                                stack.push(decimalFormat(new DivideOperation(stack.pop(),
+                                        stack.pop()).calculate()));
+                            else
+                            System.out.println("Undefined - Divide by 0");
                         break;
                     default:
                         System.out.println("Reached Default in Case:");
@@ -91,17 +91,18 @@ public class Calculator {
     }
 
     //enforcing 15 digit
-    public Double decimalFormat(Double digit) {
+    public Double decimalFormat(Double digit) throws RPNException{
         NumberFormat format = NumberFormat.getIntegerInstance();
         int STORE_MAX_DIGIT = 15;
         Double formatDigit;
         format.setMaximumFractionDigits(STORE_MAX_DIGIT);
+        format.setMaximumIntegerDigits(STORE_MAX_DIGIT);
         formatDigit = Double.valueOf(format.format(digit));
         return formatDigit;
     }
 
     // Limiting decimal to 10 for display
-    public Double outputFormat(Double digit) {
+    public Double outputFormat(Double digit) throws RPNException{
         int DISPLAY_MAX_DIGIT = 10;
         NumberFormat format = NumberFormat.getIntegerInstance();
         format.setMaximumFractionDigits(DISPLAY_MAX_DIGIT);
@@ -112,9 +113,17 @@ public class Calculator {
     }
 
     //Print the Stack with whitespace as delimiter.
-    public void output(){
+    public void output() {
+
         System.out.print("Stack: ");
-        stack.getStack().forEach(e -> System.out.print(outputFormat(e) + "  "));
+
+            stack.getStack().forEach(e -> {
+                try {
+                    System.out.print(outputFormat(e) + "  ");
+                } catch (RPNException e1) {
+                    System.out.println("Something wrong with the number, this may be too large!");                }
+            });
+
         System.out.print("\n");
     }
 }
