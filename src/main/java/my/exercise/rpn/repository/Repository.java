@@ -2,6 +2,9 @@ package my.exercise.rpn.repository;
 
 import java.util.Stack;
 
+/**
+ * Repository to perform undo operation based on Memento Pattern
+ */
 public class Repository {
     public Stack<Double> repoStack;
 

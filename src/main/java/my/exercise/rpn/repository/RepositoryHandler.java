@@ -4,6 +4,9 @@ import my.exercise.rpn.RPNException;
 
 import java.util.Stack;
 
+/**
+ * Caretaker for the Repository
+ */
 public class RepositoryHandler{
 
     private final Stack<Object> objectStack;
