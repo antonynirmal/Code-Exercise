@@ -12,20 +12,20 @@ import static my.exercise.rpn.operatons.Operator.*;
  */
 public class Calculator {
 
-    public RPNStack stack;
-    int position;
+    private RPNStack stack;
+    private int position;
 
     Calculator() {
         position = 0;
         stack = new RPNStack();
     }
 
-    public RPNStack getStack() {
+    private RPNStack getStack() {
         return stack;
     }
 
     //Calculate Reverse Polish Notation
-    public void invoker(String expression) throws RPNException {
+    protected void invoker(String expression) throws RPNException {
 
         Scanner input = new Scanner(expression);
         String token;
@@ -85,13 +85,13 @@ public class Calculator {
     }
 
     // Reset and clear stack
-    public void reset(){
+    private void reset(){
         position=0;
         stack.clear();
     }
 
     //enforcing 15 digit
-    public Double decimalFormat(Double digit) throws RPNException{
+    private Double decimalFormat(Double digit) throws RPNException{
         NumberFormat format = NumberFormat.getIntegerInstance();
         int STORE_MAX_DIGIT = 15;
         Double formatDigit;
@@ -102,7 +102,7 @@ public class Calculator {
     }
 
     // Limiting decimal to 10 for display
-    public Double outputFormat(Double digit) throws RPNException{
+    private Double outputFormat(Double digit) throws RPNException{
         int DISPLAY_MAX_DIGIT = 10;
         NumberFormat format = NumberFormat.getIntegerInstance();
         format.setMaximumFractionDigits(DISPLAY_MAX_DIGIT);
@@ -113,7 +113,7 @@ public class Calculator {
     }
 
     //Print the Stack with whitespace as delimiter.
-    public void output() {
+    protected void output() {
 
         System.out.print("Stack: ");
 
